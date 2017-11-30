@@ -3,17 +3,16 @@
     height: 100vh;
 }
 
-.two {
+.presets {
     background: #dee;
 }
-.one, .two {
+.one, .presets {
     height: 100vh;
     display: block;
     position: relative;
 }
-
 .bg {
-    margin: 10px 0px;
+    /*margin: 10px 0px;*/
     background: #f6f6f6;
     padding: 10px;
     transition: .s2;
@@ -21,9 +20,13 @@
 .bg:hover {
     cursor: pointer;
 }
-.two .bg {
+.presets .bg {
     text-align: center;
-    border: 1px solid #999;
+    border: 1px solid #c7c3c3;
+    margin-bottom: -1px;
+}
+.presets .row:hover {
+    background: #ffee44;
 }
 
 #drag .bg {
