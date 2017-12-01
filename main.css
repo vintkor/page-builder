@@ -34,6 +34,14 @@
 .presets .row:hover {
     background: #ffee44;
 }
+.after {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+.after .row {
+    margin-right: 0;
+    margin-left: 0;
+}
 
 #drag .after {
     position: relative;
@@ -41,12 +49,10 @@
 #drag .bg {
     background: none;
 }
-
 #drag .bg:hover {
-    background: #f6f6f6;
+    background: rgba(0,0,0,.1);
 }
-#drag .after:after {
-    content: '';
+.edit-btn {
     display: none;
     position: absolute;
     top: 10px;
@@ -57,8 +63,10 @@
     background: #fee324;
     border: 1px solid #e6ca00;
     cursor: pointer;
+    outline: none;
+    z-index: 10;
 }
-#drag .after:hover:after {
+#drag .after:hover .edit-btn {
     display: block;
 }
 .remove {
@@ -69,4 +77,19 @@
     top: 0; left: 0; 
     height: auto;
     width: 80%;
+}
+
+#options {
+    width: 20%;
+    position: fixed;
+    display: block;
+    background: #f6f6f6;
+    top: 0;
+    height: 100vh;
+    transition: .3s;
+    left: 100%;
+    padding: 15px;
+}
+#options.active {
+    transform: translateX(-100%);
 }
