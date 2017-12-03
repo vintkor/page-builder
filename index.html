@@ -7,10 +7,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.2/js/medium-editor.min.js"></script>
     <script src="http://mkawczynski07.github.io/medium-editor-list/medium-editor-list.js"></script>
+    <script src="http://yabwe.github.io/medium-editor-tables/bower_components/medium-editor-tables/dist/js/medium-editor-tables.js"></script>
 </head>
 <body>
     <div class="remove">Remove zone</div>
-    
+
             <div class="one">
                 <div class="container-fluid">
                     <div id="drag"></div>
@@ -114,6 +115,23 @@
                             <input type="numper" id="paddingBottom" data-unit="px" class="input form-control">
                         </div>
                     </div>
+                    <h4>Наружние отступы</h4>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <label for="marginTop">Сверху</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="numper" id="marginTop" data-unit="px" class="input form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <label for="marginBottom">Снизу</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="numper" id="marginBottom" data-unit="px" class="input form-control">
+                        </div>
+                    </div>
                 </form>
                 <button id="optionsSave" class="btn btn-success">Close</button>
             </div>
@@ -122,7 +140,7 @@
 
 <script>
 
-    
+
     var drake = dragula({
         containers: [document.getElementById('drag'), document.getElementById('presets')],
         copy: function (el, source) {
@@ -139,9 +157,16 @@
         $(clone).attr('id', 'cloned_' + idCount);
         idCount ++;
     });
-    
+
     drake.on('dragend', function(el){
         var editor = new MediumEditor('#drag .editor', {
+            buttonLabels: 'fontawesome',
+            extensions: {
+                table: new MediumEditorTable({
+                    rows: 40,
+                    columns: 40
+                })
+            },
             toolbar: {
                 buttons: [
                     'bold',
@@ -153,13 +178,18 @@
                     'justifyCenter',
                     'justifyRight',
                     'justifyFull',
+                    'unorderedlist',
+                    'orderedlist',
                     'image',
                     'html',
-                    'removeFormat'
-                ]
+                    'removeFormat',
+                    'table'
+                ],
+                static: true,
+                sticky: true
             },
         });
-        
+
         $('.edit-btn').click(function(event) {
             $('.input').each(function () {
                 $(this).val('');
@@ -170,7 +200,7 @@
             options.addClass('active');
             options.find('h5').text(parent.attr('id'));
         });
-        
+
     });
 
     $('#optionsSave').click(function(event) {
@@ -187,10 +217,13 @@
 
 
 </script>
+<link rel="stylesheet" href="http://yabwe.github.io/medium-editor-tables/bower_components/normalize.css/normalize.css">
 <link rel="stylesheet" href="main.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.2/css/medium-editor.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.2/css/themes/flat.css">
+<link rel="stylesheet" href="http://yabwe.github.io/medium-editor-tables/bower_components/medium-editor-tables/dist/css/medium-editor-tables.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </body>
 </html>
