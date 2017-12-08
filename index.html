@@ -3,11 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Simple page builder</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.2/js/medium-editor.min.js"></script>
     <script src="http://mkawczynski07.github.io/medium-editor-list/medium-editor-list.js"></script>
-    <script src="http://yabwe.github.io/medium-editor-tables/bower_components/medium-editor-tables/dist/js/medium-editor-tables.js"></script>
+    <script src="http://yabwe.github.io/medium-editor-tables/bower_components/medium-editor-tables/dist/js/medium-editor-tables.js"></script> -->
+
+    <!-- Font Awesome for awesome icons. You can redefine icons used in a plugin configuration -->
+    <!-- <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> -->
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="bower_components/medium-editor/dist/css/medium-editor.min.css">
+    <!-- <link rel="stylesheet" href="bower_components/medium-editor/dist/css/themes/default.css"> -->
+    <link rel="stylesheet" href="bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin.min.css">
+
+    <!-- JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/medium-editor/dist/js/medium-editor.js"></script>
+    <script src="bower_components/handlebars/handlebars.runtime.min.js"></script>
+    <script src="bower_components/jquery-sortable/source/js/jquery-sortable-min.js"></script>
+    <script src="bower_components/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <script src="bower_components/blueimp-file-upload/js/jquery.iframe-transport.js"></script>
+    <script src="bower_components/blueimp-file-upload/js/jquery.fileupload.js"></script>
+    <script src="bower_components/medium-editor-insert-plugin/dist/js/medium-editor-insert-plugin.min.js"></script>
 </head>
 <body>
     <div class="remove">Remove zone</div>
@@ -161,12 +180,12 @@
     drake.on('dragend', function(el){
         var editor = new MediumEditor('#drag .editor', {
             buttonLabels: 'fontawesome',
-            extensions: {
-                table: new MediumEditorTable({
-                    rows: 40,
-                    columns: 40
-                })
-            },
+            // extensions: {
+            //     table: new MediumEditorTable({
+            //         rows: 40,
+            //         columns: 40
+            //     })
+            // },
             toolbar: {
                 buttons: [
                     'bold',
@@ -181,13 +200,100 @@
                     'unorderedlist',
                     'orderedlist',
                     'image',
-                    'html',
-                    'removeFormat',
-                    'table'
-                ],
-                static: true,
-                sticky: true
-            },
+                    'html'
+                    // 'removeFormat'
+                    // 'table'
+                ]
+                // static: true,
+                // sticky: true
+            }
+        });
+
+        $('#drag .editor').mediumInsert({
+            editor: editor, // (MediumEditor) Instance of MediumEditor
+            enabled: true, // (boolean) If the plugin is enabled
+            addons: { // (object) Addons configuration
+                images: { // (object) Image addon configuration
+                    label: '<span class="fa fa-camera"></span>', // (string) A label for an image addon
+                    uploadScript: null, // DEPRECATED: Use fileUploadOptions instead
+                    deleteScript: 'delete.php', // (string) A relative path to a delete script
+                    deleteMethod: 'POST',
+                    fileDeleteOptions: {}, // (object) extra parameters send on the delete ajax request, see http://api.jquery.com/jquery.ajax/
+                    preview: true, // (boolean) Show an image before it is uploaded (only in browsers that support this feature)
+                    captions: true, // (boolean) Enable captions
+                    captionPlaceholder: 'Type caption for image (optional)', // (string) Caption placeholder
+                    autoGrid: 3, // (integer) Min number of images that automatically form a grid
+                    formData: {}, // DEPRECATED: Use fileUploadOptions instead
+                    fileUploadOptions: { // (object) File upload configuration. See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
+                        url: 'upload.php', // (string) A relative path to an upload script
+                        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i // (regexp) Regexp of accepted file types
+                    },
+                    styles: { // (object) Available image styles configuration
+                        wide: { // (object) Image style configuration. Key is used as a class name added to an image, when the style is selected (.medium-insert-images-wide)
+                            label: '<span class="fa fa-align-justify"></span>', // (string) A label for a style
+                            added: function ($el) {}, // (function) Callback function called after the style was selected. A parameter $el is a current active paragraph (.medium-insert-active)
+                            removed: function ($el) {} // (function) Callback function called after a different style was selected and this one was removed. A parameter $el is a current active paragraph (.medium-insert-active)
+                        },
+                        left: {
+                            label: '<span class="fa fa-align-left"></span>'
+                        },
+                        right: {
+                            label: '<span class="fa fa-align-right"></span>'
+                        },
+                        grid: {
+                            label: '<span class="fa fa-th"></span>'
+                        }
+                    },
+                    actions: { // (object) Actions for an optional second toolbar
+                        remove: { // (object) Remove action configuration
+                            label: '<span class="fa fa-times"></span>', // (string) Label for an action
+                            clicked: function ($el) { // (function) Callback function called when an action is selected
+                                var $event = $.Event('keydown');
+                                
+                                $event.which = 8;
+                                $(document).trigger($event);   
+                            }
+                        }
+                    },
+                    messages: {
+                        acceptFileTypesError: 'This file is not in a supported format: ',
+                        maxFileSizeError: 'This file is too big: '
+                    },
+                    uploadCompleted: function ($el, data) {}, // (function) Callback function called when upload is completed
+                    uploadFailed: function (uploadErrors, data) {} // (function) Callback function called when upload failed
+                },
+                embeds: { // (object) Embeds addon configuration
+                    label: '<span class="fa fa-youtube-play"></span>', // (string) A label for an embeds addon
+                    placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter', // (string) Placeholder displayed when entering URL to embed
+                    captions: true, // (boolean) Enable captions
+                    captionPlaceholder: 'Type caption (optional)', // (string) Caption placeholder
+                    oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1', // (string/null) URL to oEmbed proxy endpoint, such as Iframely, Embedly or your own. You are welcome to use "http://medium.iframe.ly/api/oembed?iframe=1" for your dev and testing needs, courtesy of Iframely. *Null* will make the plugin use pre-defined set of embed rules without making server calls.
+                    styles: { // (object) Available embeds styles configuration
+                        wide: { // (object) Embed style configuration. Key is used as a class name added to an embed, when the style is selected (.medium-insert-embeds-wide)
+                            label: '<span class="fa fa-align-justify"></span>', // (string) A label for a style
+                            added: function ($el) {}, // (function) Callback function called after the style was selected. A parameter $el is a current active paragraph (.medium-insert-active)
+                            removed: function ($el) {} // (function) Callback function called after a different style was selected and this one was removed. A parameter $el is a current active paragraph (.medium-insert-active)
+                        },
+                        left: {
+                            label: '<span class="fa fa-align-left"></span>'
+                        },
+                        right: {
+                            label: '<span class="fa fa-align-right"></span>'
+                        }
+                    },
+                    actions: { // (object) Actions for an optional second toolbar
+                        remove: { // (object) Remove action configuration
+                            label: '<span class="fa fa-times"></span>', // (string) Label for an action
+                            clicked: function ($el) { // (function) Callback function called when an action is selected
+                                var $event = $.Event('keydown');
+                                
+                                $event.which = 8;
+                                $(document).trigger($event);   
+                            }
+                        }
+                    }
+                }
+            }
         });
 
         $('.edit-btn').click(function(event) {
@@ -217,13 +323,13 @@
 
 
 </script>
-<link rel="stylesheet" href="http://yabwe.github.io/medium-editor-tables/bower_components/normalize.css/normalize.css">
+<!-- <link rel="stylesheet" href="http://yabwe.github.io/medium-editor-tables/bower_components/normalize.css/normalize.css"> -->
 <link rel="stylesheet" href="main.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.2/css/medium-editor.min.css">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.2/css/medium-editor.min.css"> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor/5.23.2/css/themes/flat.css">
-<link rel="stylesheet" href="http://yabwe.github.io/medium-editor-tables/bower_components/medium-editor-tables/dist/css/medium-editor-tables.css">
+<!-- <link rel="stylesheet" href="http://yabwe.github.io/medium-editor-tables/bower_components/medium-editor-tables/dist/css/medium-editor-tables.css"> -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </body>
 </html>
